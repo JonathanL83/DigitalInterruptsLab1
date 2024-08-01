@@ -1,28 +1,25 @@
 #include "mbed.h"
 
-#define USER_BUTTON PC_13
+// Define the button pin 
+InterruptIn button(PC_13);
 
-InterruptIn button(USER_BUTTON);
+// Flag variable
+volatile bool button_flag = false;
 
-EventQueue queue;
-
-void handle_button_press() {
-    printf("Button pressed\n");
-}
-
-// Interrupt handler function
+// Interrupt function
 void button_pressed() {
-    queue.call(handle_button_press);
+    button_flag = true;
 }
 
 int main() {
     // Attach the interrupt handler to the button press event
     button.fall(&button_pressed);
 
-    // Dispatch events in the queue forever in the main thread
-    queue.dispatch_forever();
-
+    // Main loop
     while (1) {
-        
+        if (button_flag) {
+            printf("Button pressed\n");
+            button_flag = false;
+        }
     }
 }
