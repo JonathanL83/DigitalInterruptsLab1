@@ -1,25 +1,18 @@
 #include "mbed.h"
 
-// Define the button pin with pull-up mode
-InterruptIn button(PA_13,PullUp);
+#define USER_BUTTON PC_13
 
-// Flag variable
-volatile bool button_flag = false;
+InterruptIn button(USER_BUTTON);
 
-// Interrupt function
 void button_pressed() {
-    button_flag = true;
+    printf("Button pressed\n");
 }
 
 int main() {
-    // Attach the interrupt handler to the button press event
+    
     button.fall(&button_pressed);
 
-    // Main loop
     while (1) {
-        if (button_flag) {
-            printf("Button pressed\n");
-            button_flag = false;
-        }
+        // Do nothing, waiting for the interrupt
     }
 }
