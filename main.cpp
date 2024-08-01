@@ -1,26 +1,24 @@
- MbedOS Error Info
-Error Status: 0x80010133 Code: 307 Module: 1
-Error Message: Mutex: 0x200015FC, Not allowed in ISR context
-Location: 0x800934D
-Error Value: 0x200015FC
-
-
-
 #include "mbed.h"
 
-#define USER_BUTTON PC_13
+InterruptIn button(PA_13,PullUp);
 
-InterruptIn button(USER_BUTTON);
+// Flag variable
+volatile bool button_flag = false;
 
+// Interrupt function
 void button_pressed() {
-    printf("Button pressed\n");
+    button_flag = true;
 }
 
 int main() {
     
     button.fall(&button_pressed);
 
+    // Main loop
     while (1) {
-        // Do nothing, waiting for the interrupt
+        if (button_flag) {
+            printf("Button pressed\n");
+            button_flag = false;
+        }
     }
 }
